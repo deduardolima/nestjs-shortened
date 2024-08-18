@@ -48,7 +48,6 @@ jobs:
           gcloud auth configure-docker gcr.io --quiet
       - name: Build and push Docker image
         run: |
-          cd app
           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/bi-server:$GITHUB_SHA .
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/bi-server:$GITHUB_SHA
       - name: Deploy to Cloud Run
