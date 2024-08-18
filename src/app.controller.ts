@@ -1,7 +1,7 @@
-import { Controller, Get, Param, Req, Res } from '@nestjs/common';
-import { AppService } from './app.service';
-import { Request, Response } from 'express';
+import { Controller, Get, Param, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
+import { AppService } from './app.service';
 
 @ApiTags('ShortUrl')
 @Controller()
@@ -20,7 +20,7 @@ export class AppController {
 
   @Get('cache/:shortUrl')
   async clearCache(@Param('shortUrl') shortUrl: string) {
-    await this.appService.clear(shortUrl)
-    return `Cache shorty ${shortUrl} foi limpo`
-  };
+    await this.appService.clear(shortUrl);
+    return `Cache shorty ${shortUrl} foi limpo`;
+  }
 }
