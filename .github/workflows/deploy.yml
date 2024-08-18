@@ -48,8 +48,8 @@ jobs:
           gcloud auth configure-docker gcr.io --quiet
       - name: Build and push Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/bi-server:$GITHUB_SHA .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/bi-server:$GITHUB_SHA
+            docker build -t gcr.io/nestjs-api-374517/bi-server:$GITHUB_SHA .
+            docker push gcr.io/nestjs-api-374517/bi-server:$GITHUB_SHA
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy bi-server \
