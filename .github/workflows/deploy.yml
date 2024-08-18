@@ -45,7 +45,8 @@ jobs:
           export_default_credentials: true
       - name: Authenticate Docker
         run: |
-          gcloud auth configure-docker gcr.io --quiet
+         # gcloud auth configure-docker gcr.io --quiet
+         echo "${{ secrets.GCP_SA_KEY }}" | docker login -u _json_key --password-stdin https://gcr.io
       - name: Build and push Docker image
         run: |
             docker build -t gcr.io/nestjs-api-374517/bi-server:$GITHUB_SHA .
