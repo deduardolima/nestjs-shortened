@@ -33,13 +33,17 @@ export class AppService {
     const startTime = Date.now();
 
     const currentSpan = this.traceService.getSpan();
-    currentSpan.addEvent('evento get originalUrl');
+    if (currentSpan) {
+      currentSpan.addEvent('evento get originalUrl');
+    }
 
     const cachedUrl = await this.cacheManager.get<string>(shortUrl);
     if (cachedUrl) {
       this.cacheHitCounter.add(1);
       this.latencyHistogram.record(Date.now() - startTime, { cache: 'hit' });
-      currentSpan.end();
+      if (currentSpan) {
+        currentSpan.end();
+      }
       return cachedUrl;
     }
 
@@ -47,14 +51,19 @@ export class AppService {
     if (url) {
       await this.cacheManager.set(shortUrl, url.originalUrl);
       this.latencyHistogram.record(Date.now() - startTime, { cache: 'miss' });
-      currentSpan.end();
+      if (currentSpan) {
+        currentSpan.end();
+      }
       return url.originalUrl;
     }
 
     this.latencyHistogram.record(Date.now() - startTime, { cache: 'miss' });
-    currentSpan.end();
+    if (currentSpan) {
+      currentSpan.end();
+    }
     return null;
   }
+
 
   async clear(shortUrl: string) {
     await this.cacheManager.del(shortUrl);

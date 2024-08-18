@@ -36,23 +36,31 @@ let AppService = class AppService {
     async getOriginalUrl(shortUrl) {
         const startTime = Date.now();
         const currentSpan = this.traceService.getSpan();
-        currentSpan.addEvent('evento get originalUrl');
+        if (currentSpan) {
+            currentSpan.addEvent('evento get originalUrl');
+        }
         const cachedUrl = await this.cacheManager.get(shortUrl);
         if (cachedUrl) {
             this.cacheHitCounter.add(1);
             this.latencyHistogram.record(Date.now() - startTime, { cache: 'hit' });
-            currentSpan.end();
+            if (currentSpan) {
+                currentSpan.end();
+            }
             return cachedUrl;
         }
         const url = await this.urlsService.findByShortUrl(shortUrl);
         if (url) {
             await this.cacheManager.set(shortUrl, url.originalUrl);
             this.latencyHistogram.record(Date.now() - startTime, { cache: 'miss' });
-            currentSpan.end();
+            if (currentSpan) {
+                currentSpan.end();
+            }
             return url.originalUrl;
         }
         this.latencyHistogram.record(Date.now() - startTime, { cache: 'miss' });
-        currentSpan.end();
+        if (currentSpan) {
+            currentSpan.end();
+        }
         return null;
     }
     async clear(shortUrl) {
