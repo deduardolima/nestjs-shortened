@@ -40,12 +40,12 @@ jobs:
           npm run test
 
   deploy:
-  permissions:
+   permissions:
     contents: 'read'
     id-token: 'write'
-  runs-on: ubuntu-latest
-  needs: [test]
-  steps:
+   runs-on: ubuntu-latest
+   needs: [test]
+   steps:
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -73,3 +73,4 @@ jobs:
 
     - name: Show Output
       run: echo ${{ steps.deploy.outputs.url }}
+
