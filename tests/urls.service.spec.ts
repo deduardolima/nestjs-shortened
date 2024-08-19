@@ -53,7 +53,7 @@ describe('UrlsService', () => {
     expect(result).toEqual(expect.objectContaining({
       id: '1',
       originalUrl: 'http://test.com',
-      shortUrl: "http://localhost:3000/abc123",
+      shortUrl: "http://localhost:8080/abc123",
       owner: null,
     }));
   });

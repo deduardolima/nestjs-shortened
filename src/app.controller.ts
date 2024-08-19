@@ -18,6 +18,7 @@ export class AppController {
     return res.status(404).send('URL não encontrada');
   }
 
+
   @Get('cache/:shortUrl')
   async clearCache(@Param('shortUrl') shortUrl: string) {
     await this.appService.clear(shortUrl);
