@@ -58,6 +58,10 @@ Clone o repositório do projeto em seu ambiente local.
 
 ```
 git clone https://github.com/deduardolima/nestjs-shortened.git
+```
+entre no diretorio do projeto
+
+```
 cd nestjs-shortened
 ```
 
@@ -67,12 +71,20 @@ cd nestjs-shortened
 ### Construir e Rodar com Docker
 Para rodar a aplicação usando Docker Compose, execute o seguinte comando:
 ```
-docker-compose up --build
+docker compose up --build -d
 ```
 Isso irá:
 
 Construir a aplicação a partir do Dockerfile.
 Subir os serviços definidos no docker-compose.yml (PostgreSQL, Redis, Prometheus, Grafana, Jaeger, etc.).
+
+### Migrations do Prisma
+
+É necessário odar as migrations manualmente, use o comando abaixo:
+
+```bash
+docker exec -it shortened npx prisma migrate deploy
+```
 
 ### Acessar a API
 
@@ -87,13 +99,7 @@ Para gerenciar o banco de dados, você pode acessar o PgAdmin na URL [http://loc
 - **Usuário**: `email@email.com`
 - **Senha**: `123456`
 
-### Migrations do Prisma
 
-Caso precise rodar as migrations manualmente, use o comando abaixo dentro do contêiner da aplicação:
-
-```bash
-docker exec -it shortened npx prisma migrate deploy
-```
 <h2 id="features">✔️ Features</h2>
 
 A API possui endpoints para encurtar URLs, redirecionar URLs encurtadas, gerenciar cache com Redis, e observar métricas de performance usando OpenTelemetry.
