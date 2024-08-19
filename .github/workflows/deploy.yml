@@ -27,8 +27,6 @@ jobs:
           cache: "npm"
           node-version: ${{ matrix.node-version }}
           cache-dependency-path: "package-lock.json"
-      - name: Rename env.example to .env
-        run: mv env.example .env
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: Build the project
@@ -67,6 +65,17 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
+          env_vars: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=6379
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_EXPIRES_IN=1h
+            BCRYPT_COST=10
+            PORT=8080
+            BASE_URL=${{ steps.deploy.outputs.url }}
+            OTEL_SERVICE_NAME=shortened-service
+            OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318/v1/traces
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
