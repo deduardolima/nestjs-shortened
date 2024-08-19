@@ -1,23 +1,37 @@
-# URL Shortener API
+<p>
+<a href="#sobre">Sobre</a> |
+<a href="#tecnologia">Tecnologias</a> |
+<a href="#variaveis">Variaveis</a> |
+<a href="#back">Rodando o back-end</a> |
+<a href="#features">Features</a> |
+<a href="#melhorias">Pontos de Melhorias</a> |
+<a href="#desenvolvedores">Desenvolvedores</a>
+</p>
 
-## Descrição
+<h1 id="sobre"> Shortener API  </h1>
 
 Este é um projeto de API REST para encurtamento de URLs. A aplicação foi construída utilizando Node.js com o framework NestJS, Prisma ORM, PostgreSQL, Redis e OpenTelemetry para observabilidade. O projeto também faz uso de Docker para facilitar a execução e gerenciamento dos serviços.
 
-## Requisitos
 
-- Docker
-- Docker Compose
+<h2 id="tecnologia">🛠 Tecnologias</h2>
 
-## Estrutura do Projeto
+- [**NodeJS**](https://nodejs.org/en/docs/): Plataforma JavaScript que permite rodar código no lado do servidor.
+- [**NestJS**](https://nestjs.com/): Framework Node.js, baseado em TypeScript.
+- [**TypeScript**](https://www.typescriptlang.org/): Linguagem de programação
+- [**Bcrypt**](https://www.npmjs.com/package/bcrypt): Biblioteca para hash de senhas, garantindo armazenamento seguro.
+- [**Prisma**](https://www.prisma.io/): ORM que simplifica o acesso a banco de dados com migrações, geração de schemas e consultas
+- [**Redis**](https://redis.io/): Armazenamento em cache de dados na memória para melhorar a performance de consultas frequentes.
+- [**OpenTelemetry**](https://opentelemetry.io/): Ferramenta para rastreamento distribuído e coleta de métricas de performance da aplicação.
+- [**Prometheus**](https://prometheus.io/): Sistema de monitoramento e alerta utilizado para armazenar e exibir métricas da API.
+- [**Grafana**](https://grafana.com/): Plataforma de visualização de métricas, permitindo criar dashboards a partir dos dados do Prometheus.
+- [**Jaeger**](https://www.jaegertracing.io/): Ferramenta para rastreamento de transações distribuídas, usada para observar o fluxo de requisições na aplicação.
+- [**Docker**](https://www.docker.com/): Ferramenta para conteinerização de aplicações
+- [**PostgreSQL**](https://www.postgresql.org/): Banco de dados relacional 
+- [**Jest**](https://jestjs.io/pt-BR/docs/api): Framework de testes utilizado para garantir a confiabilidade do código e cobertura de testes.
 
-- **NestJS**: Framework utilizado para construção da API.
-- **Prisma ORM**: Utilizado para gerenciar as interações com o banco de dados PostgreSQL.
-- **Redis**: Utilizado para caching de URLs e melhorias de performance no redirecionamento.
-- **OpenTelemetry**: Utilizado para coletar métricas e traces para observabilidade.
-- **PostgreSQL**: Banco de dados relacional utilizado para armazenar dados de URLs, usuários e cliques.
 
-## Variáveis de Ambiente
+
+<h2 id="variaveis">📃 Variaveis de Ambiente</h2>
 
 Antes de rodar o projeto, você precisará definir algumas variáveis de ambiente. Exemplo de um arquivo `.env`:
 
@@ -32,19 +46,22 @@ BASE_URL=http://localhost:8080
 OTEL_SERVICE_NAME=shortened-service
 OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318/v1/traces
 ```
+<h2 id="back"> 🖥 Rodando o Back End (servidor)</h2>
 
-## Como Rodar o Projeto
+### Pre-Requisitos
+- Docker
+- Docker Compose
 
 ### Clone o Repositório
 
 Clone o repositório do projeto em seu ambiente local.
 
 ```
-git clone https://github.com/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/deduardolima/nestjs-shortened.git
+cd nestjs-shortened
 ```
 
-## Defina as Variáveis de Ambiente
+### Defina as Variáveis de Ambiente
  Certifique-se de criar um arquivo .env na raiz do projeto com as variáveis de ambiente necessárias.
 
 ### Construir e Rodar com Docker
@@ -77,6 +94,52 @@ Caso precise rodar as migrations manualmente, use o comando abaixo dentro do con
 ```bash
 docker exec -it shortened npx prisma migrate deploy
 ```
+<h2 id="features">✔️ Features</h2>
+
+A API possui endpoints para encurtar URLs, redirecionar URLs encurtadas, gerenciar cache com Redis, e observar métricas de performance usando OpenTelemetry.
+
+🔐 Autenticação
+- [x] Login com email e senha
+- [x] Autenticação por token: Acesso protegido por autenticação baseada em token (JWT) para endpoints restritos.
+📝 Cadastro de Usuário
+- [x] Cadastro de usuário 
+- [x] Criptografia da senha do tipo hash com Bcrypt
+🔗 URLs Encurtadas
+ - [x] Encurtar URL: Geração de URLs encurtadas associadas a um usuário autenticado.
+ - [x] Redirecionamento de URL: Redireciona para a URL original com base no código da URL encurtada.
+ - [x] Validação e Cache: Validação da URL encurtada e armazenamento em cache para melhorar a performance.
+ - [x] Contabilização de Cliques: Registra o número de cliques/redirecionamentos em uma URL encurtada.
+
+🔍 Consultas
+ Consulta de URL por ID: Permite buscar a URL original a partir do ID da URL encurtada, validando se está no cache ou banco de dados.
+
+📊 Observabilidade
+ - [x] Métricas de Performance: Monitora e expõe métricas como latência, contagem de redirecionamentos, e taxa de cache hit/miss através de endpoints Prometheus.
+ - [x] Tracing: Captura de traces de requisições HTTP para visualização no Jaeger.
+
+🎲 Modelagem do Banco de Dados
+- [x] Usuários: Armazena informações dos usuários, como email, senha criptografada e data de criação.
+- [x] URLs Encurtadas: Relaciona a URL original com a URL encurtada, o usuário que a criou, e o número de cliques recebidos.
+
+Exemplo de Endpoints
+POST /auth/login
+Realiza login com email e senha, retornando um token JWT.
+
+POST /auth/register
+Registra um novo usuário com email e senha criptografada.
+
+POST /urls
+Gera uma URL encurtada para o usuário autenticado.
+
+GET /urls/{shortUrl}
+Redireciona para a URL original associada ao código fornecido.
+
+GET /urls/{shortUrl}/status
+Retorna o status e estatísticas da URL encurtada, como cliques e dados de cache.
+
+GET /metrics
+Exibe métricas de performance da API (usado por Prometheus).
+
 
 ### Observabilidade
 
@@ -93,11 +156,8 @@ Para rodar os testes unitários, execute o seguinte comando:
 ```bash
 npm run test
 ```
-### Deploy no Cloud (Exemplo: Google Cloud Run)
-O projeto possui um pipeline configurado para realizar  deploy da aplicação utilizando Cloud Run.
+<h2 id="melhorias"> Pontos de Melhorias</h2>
 
-
-### Pontos de Melhoria
  Divisão em Microsserviços: O encurtador pode ser dividido em diversos microsserviços independentes, como:
 - Serviço de Encurtamento de URLs: Responsável por gerar, armazenar e redirecionar URLs.
 - Serviço de Autenticação: Pode ser implementado usando soluções como AWS IAM ou Keycloak.
@@ -127,3 +187,10 @@ Solução: Implementar soluções de observabilidade (Prometheus, Grafana, Jaege
 - Orquestração e Deploy Contínuo
 Desafio: Implementar pipelines de CI/CD para garantir que todos os microsserviços sejam construídos, testados e implantados de forma eficiente e independente.
 Solução: Utilizar ferramentas de CI/CD como GitHub Actions, Jenkins ou GitLab CI, integradas com Kubernetes, para automatizar o deploy e a gestão de serviços.
+
+<h2 id="desenvolvedores">👨‍💻 Desenvolvedores</h2>
+<table>         
+<td><a href="https://github.com/deduardolima"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/98969787?v=4" width="100px;" alt="Imagem profile Diego Lima desenvolvedor"/><br /><sub><b> Diego Lima</b></sub></a><br />   
+</table>
+
+<a href="#voltar">Voltar para o topo ⬆️</a>
